@@ -2,47 +2,26 @@
 #include <stdio.h>
 #include "bst.h"
 
-//typedef struct bst {
-//  int item;			/* data item */
-//  struct bst *parent;	    /* pointer to parent */
-//  struct bst *left;		/* pointer to left child */
-//  struct bst *right;		/* pointer to right child */
-//} bst;
-
-bst* bstInit(bst *t, int value, bst *parent) {
-    t->item = value;
-    t->left = NULL;
-    t->right = NULL;
-    t->parent = parent;
-}
-
-int bstAdd(bst *t, int x) {
-    if(t->item != x) {
-        if(t->item < x) {
-            if(t->right != NULL) {
-                bstAdd(t->right, x);
-            }
-            else {
-                t->right->parent = t;
-                t->right->item = x;
-                t->right->right = NULL;
-                t->right->left = NULL;
-                return 1;
-            }
-        }
-        if(t->item > x) {
-            if(t->left != NULL) {
-                bstAdd(t->left, x);
-            }
-            else {
-                bst *left;
-                bstInit(left, x, t);
-                t->left = left;
-                return 1;
-            }
-        }
+bst *bstAdd(bst *t, int x, bst *p) {
+    if(t == NULL){
+        bst *added;
+        added = (bst *)malloc(sizeof(bst));
+        added->item = x;
+        added->left = NULL;
+        added->right = NULL;
+        added->parent = p;
+        return added;
     }
-    else return 0;
+    else if(t->item != x){
+        if (t->item < x){
+            t->right = bstAdd(t->right, x, t);
+        }
+        else{
+            t->left = bstAdd(t->left, x, t);
+        }
+        
+    }
+    return t;
 }
 
 void printTree(bst *t) {
@@ -54,11 +33,11 @@ void printTree(bst *t) {
 }
 
 int main() {
-    bst a;
-    fflush(stdout);
-    bstInit(&a, 5, &a);
-    fflush(stdout);
-    bstAdd(&a, 3);
-    printTree(&a);
+    int i;
+    bst *a = NULL;
+    for(i = 0; i < 50; i++){
+        a = bstAdd(a, i, NULL);
+    }
+    printTree(a);
     return 0;
 }
