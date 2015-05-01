@@ -2,13 +2,6 @@
 #include <stdio.h>
 #include "bst.h"
 
-//typedef struct bst {
-//  int item;			/* data item */
-//  struct bst *parent;	    /* pointer to parent */
-//  struct bst *left;		/* pointer to left child */
-//  struct bst *right;		/* pointer to right child */
-//} bst;
-
 bst* bstInit(bst *t, int value, bst *parent) {
     t->item = value;
     t->left = NULL;
@@ -35,9 +28,9 @@ int bstAdd(bst *t, int x) {
                 bstAdd(t->left, x);
             }
             else {
-                bst *left;
-                bstInit(left, x, t);
-                t->left = left;
+                bst left;
+                bstInit(&left, x, t);
+                t->left = &left;
                 return 1;
             }
         }
