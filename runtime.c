@@ -10,6 +10,8 @@ void function(){
 	}
 }
 
+// Eventually the main function will take
+// an algorithm as it's parameter
 int main(){
 clock_t begin, end;
 double time_spent;
