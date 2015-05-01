@@ -2,8 +2,6 @@
 #include <stdio.h>
 #include "bst.h"
 
-// Added a comment
-
 //Constructs Balanced Binary Search Tree from a sorted array
 bst* sortedArrayToBST(int arr[], int start, int end, bst *p)
 {
