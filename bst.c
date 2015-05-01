@@ -2,28 +2,7 @@
 #include <stdio.h>
 #include "bst.h"
 
-/*bst *bstAdd(bst *t, int x, bst *p) {
- if(t == NULL){
- bst *added;
- added = (bst *)malloc(sizeof(bst));
- added->item = x;
- added->left = NULL;
- added->right = NULL;
- added->parent = p;
- return added;
- }
- else if(t->item != x){
- if (t->item < x){
- t->right = bstAdd(t->right, x, t);
- }
- else{
- t->left = bstAdd(t->left, x, t);
- }
- }
- return t;
- }*/
-
-//A function that constructs Balanced Binary Search Tree from a sorted array
+//Constructs Balanced Binary Search Tree from a sorted array
 bst* sortedArrayToBST(int arr[], int start, int end, bst *p)
 {
     //Base Case
@@ -39,17 +18,16 @@ bst* sortedArrayToBST(int arr[], int start, int end, bst *p)
     root->right = NULL;
     root->parent = p;
     
-    //Recursively construct the left subtree and make it
-    //left child of root
+    //Recursively construct the left subtree and make it the left child of root
     root->left =  sortedArrayToBST(arr, start, mid-1, root);
     
-    //Recursively construct the right subtree and make it
-    //right child of root
+    //Recursively construct the right subtree and make it the right child of root
     root->right = sortedArrayToBST(arr, mid+1, end, root);
     
     return root;
 }
 
+//print tree inorder
 void printTree(bst *t) {
     if(t != NULL) {
         printTree(t->left);
@@ -58,34 +36,22 @@ void printTree(bst *t) {
     }
 }
 
-/*//LCA1
-bst *lca1(bst *t, int n1, int n2) {
-    while (t != NULL)
-    {
-        //If both n1 and n2 are greater than root, then LCA lies in left
-        if (t->item > n1 && t->item > n2)
-            t = t->left;
-        
-        //If both n1 and n2 are smaller than root, then LCA lies in right
-        else if (t->item < n1 && t->item < n2)
-            t = t->right;
-        
-        else break;
-    }
-    return t;
-}*/
+//LCA functions assume that n1 and n2 are present in Binary Tree
 
-// This function returns pointer to LCA of two given values n1 and n2.
-// This function assumes that n1 and n2 are present in Binary Tree
+//LCA1
 bst *lca1(bst *root, int n1, int n2)
 {
     // Base case
-    if (root == NULL) return NULL;
+    if (root == NULL){
+        return NULL;
+    }
     
     // If either n1 or n2 matches with root's key, report
     // the presence by returning root (Note that if a key is
     // ancestor of other, then the ancestor key becomes LCA
-    if (root->item == n1 || root->item == n2) return root;
+    if (root->item == n1 || root->item == n2){
+        return root;
+    }
     
     // Look for keys in left and right subtrees
     bst *left_lca  = lca1(root->left, n1, n2);
@@ -94,12 +60,18 @@ bst *lca1(bst *root, int n1, int n2)
     // If both of the above calls return Non-NULL, then one key
     // is present in once subtree and other is present in other,
     // So this node is the LCA
-    if (left_lca && right_lca)  return root;
+    if ((left_lca != NULL) && (right_lca != NULL)){
+        return root;
+    }
     
     // Otherwise check if left subtree or right subtree is LCA
-    return (left_lca != NULL)? left_lca: right_lca;
+    if(left_lca != NULL){
+        return left_lca;
+    }
+    else{
+        return right_lca;
+    }
 }
-
 
 int main() {
     //create array
