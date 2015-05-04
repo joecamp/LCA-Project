@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "bst.h"
+#include "arrayList.c"
 
 //Constructs Balanced Binary Search Tree from a sorted array
 bst* sortedArrayToBST(int arr[], int start, int end, bst *p)
@@ -8,7 +9,7 @@ bst* sortedArrayToBST(int arr[], int start, int end, bst *p)
     //Base Case
     if (start > end)
         return NULL;
-    
+
     //Get the middle element and make it root
     int mid = (start + end)/2;
     bst *root;
@@ -17,13 +18,13 @@ bst* sortedArrayToBST(int arr[], int start, int end, bst *p)
     root->left = NULL;
     root->right = NULL;
     root->parent = p;
-    
+
     //Recursively construct the left subtree and make it the left child of root
     root->left =  sortedArrayToBST(arr, start, mid-1, root);
-    
+
     //Recursively construct the right subtree and make it the right child of root
     root->right = sortedArrayToBST(arr, mid+1, end, root);
-    
+
     return root;
 }
 
@@ -39,59 +40,72 @@ void printTree(bst *t) {
 //LCA functions assume that n1 and n2 are present in Binary Tree
 
 //LCA1
-bst *lca1(bst *root, int n1, int n2)
-{
-    // Base case
-    if (root == NULL){
-        return NULL;
-    }
-    
-    // If either n1 or n2 matches with root's key, report
-    // the presence by returning root (Note that if a key is
-    // ancestor of other, then the ancestor key becomes LCA
-    if (root->item == n1 || root->item == n2){
-        return root;
-    }
-    
-    // Look for keys in left and right subtrees
-    bst *left_lca  = lca1(root->left, n1, n2);
-    bst *right_lca = lca1(root->right, n1, n2);
-    
-    // If both of the above calls return Non-NULL, then one key
-    // is present in once subtree and other is present in other,
-    // So this node is the LCA
-    if ((left_lca != NULL) && (right_lca != NULL)){
-        return root;
-    }
-    
-    // Otherwise check if left subtree or right subtree is LCA
-    if(left_lca != NULL){
-        return left_lca;
-    }
-    else{
-        return right_lca;
-    }
+
+//Need a helper function for the first algorithm. findPath
+//finds a path from root to target, if there is none
+//then return false, otherwise store the path in path<int>
+int findPath(bst *t, arraylist *path, int target) {
+    //check if the tree is empty
+    if(t == NULL) return -1;
+
+    //store t in path
+    add(path, t->item);
+
+    //if the the current t->item is the target, return true
+    if(t->item == target) return 1;
+
+    //recursively check the left and right subtrees of t
+    if( (t->left && findPath(t->left, path, target)) ||
+        (t->right && findPath(t->right, path, target)) )
+        return 1;
+
+    //If target isn't present in t, remove t from path and
+    //return false
+    del(path, (getSize(path) - 1));
+    return -1;
 }
+
+bst *lca1(bst *t, int n1, int n2)
+{
+    //make arraylists to store paths to n1 and n2 from root of t
+    arraylist path1;
+    init(&path1);
+    arraylist path2;
+    init(&path2);
+
+    //find paths from root of t to n1 and root to n2,
+    //if either are not present in t, return NULL
+    if( findPath(t, &path1, n1) == 0 || findPath(t, &path2, n2) == 0 )
+        return NULL;
+
+    //compare the paths to get the first different value
+    int i;
+    for(i = 0; (i < getSize(&path1) && getSize(&path2)); i++) {
+        if(get(&path1, i) != get(&path2, i)) break;
+    }
+    return get(&path1, i-1);
+}
+
 
 //LCA2
 bst *lca2(bst *t, int n1, int n2)
 {
     // Check if t is NULL
     if (t == NULL) return NULL;
-    
+
     // If t matches n1 or n2, return t
     if (t->item == n1 || t->item == n2)
         return t;
-    
+
     // Recursively look for the LCA in the left and right subtrees of t
     bst *leftLCA  = lca2(t->left, n1, n2);
     bst *rightLCA = lca2(t->right, n1, n2);
-    
+
     // If we get non-null returns from the left and right subtrees of t, then
     // n1 or n2 is present in the left subtree and n1 or n2 is present in the right
     // subtree, so t must be the LCA
     if (leftLCA && rightLCA)  return t;
-    
+
     // Otherwise check if left subtree or right subtree is LCA
     if(leftLCA != NULL) return leftLCA;
     else return rightLCA;
@@ -108,7 +122,7 @@ int main() {
     //array to BST
     bst *a = NULL;
     a = sortedArrayToBST(arr, 0, (treeSize-1), NULL);
-    printTree(a);
+    //printTree(a);
     printf("\n");
 
     //LCA1
@@ -138,9 +152,9 @@ int main() {
     n1 = 10, n2 = 22;
     t = lca2(a, n1, n2);
     printf("LCA2 of %d and %d is %d \n", n1, n2, t->item);
-    
+
     //LCA3
-    
+
     //LCA4
 
     return 0;
