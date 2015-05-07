@@ -1,7 +1,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include <stdio.h>
-
+/*
 void function(){
 	for (int i = 0; i < 2000000000; i++) {
 		int sum = i;
@@ -26,3 +26,4 @@ printf("The time to run the function is %.02f\n",time_spent);
 
 return 0;
 }
+*/
