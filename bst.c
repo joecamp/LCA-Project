@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <time.h>
 #include "bst.h"
-#include "arrayList.c"
 
 int treeSize = 25; //global declariation of the nodes in the tree
 
@@ -178,7 +177,7 @@ int main() {
     end = clock();
 
     // Calculates the runtime in seconds
-    time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+    double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
     printf("The time to run the algorithm is %.02f\n",time_spent);
 
 
