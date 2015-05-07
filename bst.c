@@ -136,7 +136,7 @@ bst *lca3(bst *t){
 int main() {
 	//create runtime metrics
 	clock_t begin, end;
-	double teme_spent;
+	double time_spent;
 
     //create array
     int i;
@@ -171,14 +171,21 @@ int main() {
     // Starts runtime
     begin = clock();
 
+    //printf("The start time is %d\n",begin );
+
     t = lca2(a, n1, n2);
 
     // Ends runtime
     end = clock();
 
+    //printf("The end time is %d\n",end);
+
     // Calculates the runtime in seconds
-    double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-    printf("The time to run the algorithm is %.02f\n",time_spent);
+    // We multiply CLOCKS_PER_SEC by 1000 to accurately get the milliseconds
+
+    time_spent = (double)(end - begin) / CLOCKS_PER_SEC * 1000;
+
+    printf("The time to run the algorithm is %f\n", time_spent);
 
 
     printf("LCA2 of %d and %d is %d \n", n1, n2, t->item);
