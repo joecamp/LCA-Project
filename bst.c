@@ -185,6 +185,7 @@ int main() {
 
     time_spent = (double)(end - begin) / CLOCKS_PER_SEC * 1000;
 
+    //next to implement: writing runtimes to file
     printf("The time to run the algorithm is %f\n", time_spent);
 
 
