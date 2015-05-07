@@ -185,9 +185,13 @@ int main() {
 
     time_spent = (double)(end - begin) / CLOCKS_PER_SEC * 1000;
 
-    //next to implement: writing runtimes to file
+    //need to implement: writing runtimes to file
     printf("The time to run the algorithm is %f\n", time_spent);
 
+    /* Next to implement: using cachegrind in order to get the metrics
+     * for cache misses and instructions executed. We can get this from
+     * using valgrind and selecting the cachegrind tool.
+    */
 
     printf("LCA2 of %d and %d is %d \n", n1, n2, t->item);
 
