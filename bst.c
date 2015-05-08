@@ -3,7 +3,7 @@
 #include <time.h>
 #include "bst.h"
 
-int treeSize = 100; //global declariation of the nodes in the tree
+int treeSize = 21; //global declariation of the nodes in the tree
 
 //Constructs Balanced Binary Search Tree from a sorted array
 bst* sortedArrayToBST(int arr[], int start, int end, bst *p)
@@ -31,14 +31,21 @@ bst* sortedArrayToBST(int arr[], int start, int end, bst *p)
 }
 
 //helper function to take a bst and return the parent array
-void BSTtoParentArray(bst *t, int *parents){
-    if(t->left != NULL){
-        parents[t->left->item ] = t->item;
-        BSTtoParentArray(t->left, parents);
+//Pre-Condition: Assumes the only repeated values in the given bst are that of the root and its parent, where a roots parent's value is the same as the value of the root
+void BSTtoParentArray(bst *t, int *p){
+    
+    if(t->parent = NULL){
+        p[t->item] = -1;
     }
+    
+    if(t->left != NULL){
+        p[t->left->item] = t->item;
+        BSTtoParentArray(t->left, p);
+    }
+    
     if(t->right != NULL){
-        parents[t->right->item ] = t->item;
-        BSTtoParentArray(t->right, parents);
+        p[t->right->item] = t->item;
+        BSTtoParentArray(t->right, p);
     }
 }
 
@@ -131,36 +138,69 @@ bst *lca3(bst *t){
 }
 
 //LCA4
-//Precondition: The given BST has no repeats and is full with values 0..treeSize-1
-int lca4(bst *t, int *p, int n1, int n2){
+//Precondition: The given BST has no repeats and is full with distinct values 0..treeSize-1
+int lca4(int *p, int n1, int n2){
     int i, j;
     int v1 = n1;
     int v2 = n2;
-    //have an array to store the discovered states of the node
     int discovered[treeSize];
+    //have an array to store the discovered states of the node
+    for(i = 0 ; i < treeSize ; i++){
+        discovered[i] = 0;
+    }
     
-    for(i = 0; i < treeSize; i++){
+    //loop executes until LCA is found
+    while(1){
+        printf("s");
+        fflush(stdout);
         //FOR FIRST VALUE
-        //check if the first value and its input has already been vistied, then it is the LCA
-        if(discovered[v1]) {
+        //stop traversing if the value is equal to its parent, or, its at the root
+        if(v1 != -1){ //v1 != p[v1]
+            printf("a");
+            fflush(stdout);
+            //check if the first value and its input has already been visted, then it is the LCA
+            if(discovered[v1]) {
+                printf("b");
+                fflush(stdout);
+                return v1;
+            }
+            //otherwise mark it as discovered and traverse up the tree to its parent
+            else{
+                printf("c");
+                fflush(stdout);
+                discovered[v1] = 1;
+                v1 = p[v1];
+            }
+        }
+        printf("m");
+        fflush(stdout);
+        //FOR SECOND VALUE
+        //stop traversing if the value is equal to its parent, or, its at the root
+        if(v2 != -1){ //v2 != p[v2]
+            printf("d");
+            fflush(stdout);
+            //check if the second value and its input has already been vistied, then it is the LCA
+            if(discovered[v2]) {
+                printf("e");
+                fflush(stdout);
+                return v2;
+            }
+            //otherwise mark it as discovered and traverse up the tree to its parent
+            else{
+                printf("f");
+                fflush(stdout);
+                discovered[v2] = 1;
+                v2 = p[v2];
+            }
+        }
+        printf("r");
+        fflush(stdout);
+        //if both v1 and v2 traverse up to the root, it is the LCA
+        if((v1 == -1) && (v2 == -1)){
             return v1;
         }
-        //otherwise mark it as discovered and traverse up the tree to its parent
-        else{
-            discovered[v1] = 1;
-            v1 = p[v1];
-            //check for p = itself???
-        }
-        //FOR SECOND VALUE
-        //check if the second value and its input has already been vistied, then it is the LCA
-        if(discovered[v2]) {
-            return v2;
-        }
-        //otherwise mark it as discovered and traverse up the tree to its parent
-        else{
-            discovered[v2] = 1;
-            v2 = p[v2];
-        }
+        printf("t ");
+        fflush(stdout);
     }
 }
 
@@ -228,11 +268,13 @@ int main() {
 
     printf("LCA2 of %d and %d is %d \n", n1, n2, t->item);
 
-    n1 = 14, n2 = 8;
+    //n1 = 14, n2 = 8;
+    n1 = 2, n2 = 6;
     t = lca2(a, n1, n2);
     printf("LCA2 of %d and %d is %d \n", n1, n2, t->item);
 
-    n1 = 10, n2 = 22;
+    //n1 = 10, n2 = 22;
+    n1 = 3, n2 = 1;
     t = lca2(a, n1, n2);
     printf("LCA2 of %d and %d is %d \n", n1, n2, t->item);
     printf("\n");
@@ -246,15 +288,23 @@ int main() {
     //LCA4
     
     n1 = 0, n2 = (treeSize-1);
-    l = lca4(a, p, n1, n2);
+    l = lca4(p, n1, n2);
     printf("LCA4 of %d and %d is %d \n", n1, n2, l);
     
-    n1 = 14, n2 = 8;
-    l = lca4(a, p, n1, n2);
+    n1 = 2, n2 = 6;
+    l = lca4(p, n1, n2);
     printf("LCA4 of %d and %d is %d \n", n1, n2, l);
     
-    n1 = 10, n2 = 22;
-    l = lca4(a, p, n1, n2);
+    n1 = 3, n2 = 1;
+    l = lca4(p, n1, n2);
+    printf("LCA4 of %d and %d is %d \n", n1, n2, l);
+    
+    n1 = 1, n2 = 2;
+    l = lca4(p, n1, n2);
+    printf("LCA4 of %d and %d is %d \n", n1, n2, l);
+    
+    n1 = 3, n2 = 4;
+    l = lca4(p, n1, n2);
     printf("LCA4 of %d and %d is %d \n", n1, n2, l);
 
     printf("\n");
