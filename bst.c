@@ -3,7 +3,7 @@
 #include <time.h>
 #include "bst.h"
 
-int treeSize = 25; //global declariation of the nodes in the tree
+int treeSize = 100; //global declariation of the nodes in the tree
 
 //Constructs Balanced Binary Search Tree from a sorted array
 bst* sortedArrayToBST(int arr[], int start, int end, bst *p)
@@ -131,6 +131,38 @@ bst *lca3(bst *t){
 }
 
 //LCA4
+//Precondition: The given BST has no repeats and is full with values 0..treeSize-1
+int lca4(bst *t, int *p, int n1, int n2){
+    int i, j;
+    int v1 = n1;
+    int v2 = n2;
+    //have an array to store the discovered states of the node
+    int discovered[treeSize];
+    
+    for(i = 0; i < treeSize; i++){
+        //FOR FIRST VALUE
+        //check if the first value and its input has already been vistied, then it is the LCA
+        if(discovered[v1]) {
+            return v1;
+        }
+        //otherwise mark it as discovered and traverse up the tree to its parent
+        else{
+            discovered[v1] = 1;
+            v1 = p[v1];
+            //check for p = itself???
+        }
+        //FOR SECOND VALUE
+        //check if the second value and its input has already been vistied, then it is the LCA
+        if(discovered[v2]) {
+            return v2;
+        }
+        //otherwise mark it as discovered and traverse up the tree to its parent
+        else{
+            discovered[v2] = 1;
+            v2 = p[v2];
+        }
+    }
+}
 
 
 int main() {
@@ -148,12 +180,12 @@ int main() {
     bst *a = NULL;
     a = sortedArrayToBST(arr, 0, (treeSize-1), a);
     //printTree(a);
-    printf("\n");
 
-    //LCA1
-    int n1 = 0, n2 = (treeSize-1);
     bst *t;
     t = (bst *)malloc(sizeof(bst));
+    
+    //LCA1
+    int n1 = 0, n2 = (treeSize-1);
     /*t = lca1(a, n1, n2);
     printf("LCA1 of %d and %d is %d \n", n1, n2, t->item);
 
@@ -165,6 +197,7 @@ int main() {
     t = lca1(a, n1, n2);
     printf("LCA1 of %d and %d is %d \n", n1, n2, t->item);
      */
+    
     //LCA2
     n1 = 0, n2 = (treeSize-1);
 
@@ -202,16 +235,28 @@ int main() {
     n1 = 10, n2 = 22;
     t = lca2(a, n1, n2);
     printf("LCA2 of %d and %d is %d \n", n1, n2, t->item);
+    printf("\n");
 
     //LCA3
     
     int p [treeSize];
     BSTtoParentArray(a, p);
-    for(i = 0; i < treeSize; i++){
-        printf("%d, ", p[i]);
-    }
+    int l;
 
     //LCA4
+    
+    n1 = 0, n2 = (treeSize-1);
+    l = lca4(a, p, n1, n2);
+    printf("LCA4 of %d and %d is %d \n", n1, n2, l);
+    
+    n1 = 14, n2 = 8;
+    l = lca4(a, p, n1, n2);
+    printf("LCA4 of %d and %d is %d \n", n1, n2, l);
+    
+    n1 = 10, n2 = 22;
+    l = lca4(a, p, n1, n2);
+    printf("LCA4 of %d and %d is %d \n", n1, n2, l);
 
+    printf("\n");
     return 0;
 }
