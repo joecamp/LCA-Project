@@ -5,33 +5,58 @@
 
 int treeSize = 100; //global declariation of the nodes in the tree
 
-//Constructs Balanced Binary Search Tree from a sorted array
-bst* sortedArrayToBST(int arr[], int start, int end, bst *p)
-{
-    //Base Case
-    if (start > end)
-        return NULL;
+//swap code
+void swap (int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
 
-    //Get the middle element and make it root
-    int mid = (start + end)/2;
-    bst *root;
-    root = (bst *)malloc(sizeof(bst));
-    root->item = arr[mid];
-    root->left = NULL;
-    root->right = NULL;
-    root->parent = p;
+//function to randomize/shuffle the values in a given array of n size
+void randomize(int *arr, int n) {
+    int i;
+    // Use a different seed value so that we don't get same
+    // result each time we run this program
+    srand (time(NULL));
+    
+    // Start from the last element and swap one by one. We don't
+    // need to run for the first element that's why i > 0
+    for (i = n-1; i > 0; i--){
+        // Pick a random index from 0 to i
+        int j = rand() % (i+1);
+        // Swap arr[i] with the element at random index
+        swap(&arr[i], &arr[j]);
+    }
+}
 
-    //Recursively construct the left subtree and make it the left child of root
-    root->left =  sortedArrayToBST(arr, start, mid-1, root);
-
-    //Recursively construct the right subtree and make it the right child of root
-    root->right = sortedArrayToBST(arr, mid+1, end, root);
-
-    return root;
+//adds a node of given value and parent to given bst
+bst *bstAdd(bst *t, int x, bst *p) {
+    //initialize node
+    if(t == NULL){
+        bst *added;
+        added = (bst *)malloc(sizeof(bst));
+        added->item = x;
+        added->left = NULL;
+        added->right = NULL;
+        added->parent = p;
+        return added;
+    }
+    else if(t->item != x){
+        //otherwise, add to right
+        if (t->item < x){
+            t->right = bstAdd(t->right, x, t);
+        }
+        //otherwise, add to left
+        else{
+            t->left = bstAdd(t->left, x, t);
+        }
+    }
+    return t;
 }
 
 //helper function to take a bst and return the parent array
-//Pre-Condition: Assumes the only repeated values in the given bst are that of the root and its parent, where a roots parent's value is the same as the value of the root
+//Pre-Condition: Assumes the only repeated values in the given bst are that of the root
+//and its parent, where a roots parent's value is the same as the value of the root
 void BSTtoParentArray(bst *t, int *p){
     if(t->parent == NULL){
         p[t->item] = -1;
@@ -59,63 +84,16 @@ void printTree(bst *t) {
 
 //LCA functions assume that n1 and n2 are present in Binary Tree
 
-//LCA1
-/*
-//Need a helper function for the first algorithm. findPath
-//finds a path from root to target, if there is none
-//then return false, otherwise store the path in path<int>
-int findPath(bst *t, arraylist *path, int target) {
-    //check if the tree is empty
-    if(t == NULL) return -1;
-
-    //store t in path
-    add(path, t->item);
-
-    //if the the current t->item is the target, return true
-    if(t->item == target) return 1;
-
-    //recursively check the left and right subtrees of t
-    if( (t->left && findPath(t->left, path, target)) ||
-        (t->right && findPath(t->right, path, target)) )
-        return 1;
-
-    //If target isn't present in t, remove t from path and
-    //return false
-    del(path, (getSize(path) - 1));
-    return -1;
-}
-
-bst *lca1(bst *t, int n1, int n2)
-{
-    //make arraylists to store paths to n1 and n2 from root of t
-    arraylist path1;
-    init(&path1);
-    arraylist path2;
-    init(&path2);
-
-    //find paths from root of t to n1 and root to n2,
-    //if either are not present in t, return NULL
-    if( findPath(t, &path1, n1) == 0 || findPath(t, &path2, n2) == 0 )
-        return NULL;
-
-    //compare the paths to get the first different value
-    int i;
-    for(i = 0; (i < getSize(&path1) && getSize(&path2)); i++) {
-        if(get(&path1, i) != get(&path2, i)) break;
-    }
-    return get(&path1, i-1);
-}*/
-
+//LCA1 Joe, your LCA1 code is at the bottom
 
 //LCA2
 bst *lca2(bst *t, int n1, int n2)
 {
     // Check if t is NULL
-    if (t == NULL) return NULL;
+    if(t == NULL) return NULL;
 
     // If t matches n1 or n2, return t
-    if (t->item == n1 || t->item == n2)
-        return t;
+    if(t->item == n1 || t->item == n2) return t;
 
     // Recursively look for the LCA in the left and right subtrees of t
     bst *leftLCA  = lca2(t->left, n1, n2);
@@ -124,16 +102,11 @@ bst *lca2(bst *t, int n1, int n2)
     // If we get non-null returns from the left and right subtrees of t, then
     // n1 or n2 is present in the left subtree and n1 or n2 is present in the right
     // subtree, so t must be the LCA
-    if (leftLCA && rightLCA)  return t;
+    if(leftLCA && rightLCA) return t;
 
     // Otherwise check if left subtree or right subtree is LCA
     if(leftLCA != NULL) return leftLCA;
     else return rightLCA;
-}
-
-//LCA3
-bst *lca3(bst *t){
-    
 }
 
 //LCA4
@@ -189,43 +162,31 @@ int main() {
 	clock_t begin, end;
 	double time_spent;
 
-    //create array
+    //create array of 0..treeSize-1
     int i;
     int arr[treeSize];
     for(i = 0; i < treeSize; i++){
         arr[i] = i;
     }
+    //randomize array
+    randomize(arr, treeSize);
+    
     //array to BST
     bst *a = NULL;
-    a = sortedArrayToBST(arr, 0, (treeSize-1), a);
-    //printTree(a);
-    //printf("\n");
+    for (i = 0; i < treeSize; i++) {
+        a = bstAdd(a, arr[i], NULL);
+    }
 
     bst *t;
     t = (bst *)malloc(sizeof(bst));
     
-    //LCA1
-    int n1 = 0, n2 = (treeSize-1);
-    /*t = lca1(a, n1, n2);
-    printf("LCA1 of %d and %d is %d \n", n1, n2, t->item);
-
-    n1 = 14, n2 = 8;
-    t = lca1(a, n1, n2);
-    printf("LCA1 of %d and %d is %d \n", n1, n2, t->item);
-
-    n1 = 10, n2 = 22;
-    t = lca1(a, n1, n2);
-    printf("LCA1 of %d and %d is %d \n", n1, n2, t->item);
-     */
     
-    //LCA2
-    n1 = 0, n2 = (treeSize-1);
-
+    
     // Starts runtime
     begin = clock();
 
     //printf("The start time is %d\n",begin );
-
+    int n1 = 0, n2 = (treeSize-1);
     t = lca2(a, n1, n2);
 
     // Ends runtime
@@ -241,10 +202,10 @@ int main() {
     //need to implement: writing runtimes to file
     printf("The time to run the algorithm is %f\n", time_spent);
 
-    /* Next to implement: using cachegrind in order to get the metrics
+    /*Next to implement: using cachegrind in order to get the metrics
      * for cache misses and instructions executed. We can get this from
-     * using valgrind and selecting the cachegrind tool.
-    */
+     * using valgrind and selecting the cachegrind tool.*/
+    
 
     printf("LCA2 of %d and %d is %d \n", n1, n2, t->item);
 
@@ -258,14 +219,12 @@ int main() {
     t = lca2(a, n1, n2);
     printf("LCA2 of %d and %d is %d \n", n1, n2, t->item);
     printf("\n");
-
-    //LCA3
+    
+    //LCA4
     
     int p [treeSize];
     BSTtoParentArray(a, p);
     int l;
-
-    //LCA4
     
     n1 = 0, n2 = (treeSize-1);
     l = lca4(p, n1, n2);
@@ -278,15 +237,74 @@ int main() {
     n1 = 3, n2 = 1;
     l = lca4(p, n1, n2);
     printf("LCA4 of %d and %d is %d \n", n1, n2, l);
-    
-    n1 = 1, n2 = 2;
-    l = lca4(p, n1, n2);
-    printf("LCA4 of %d and %d is %d \n", n1, n2, l);
-    
-    n1 = 3, n2 = 4;
-    l = lca4(p, n1, n2);
-    printf("LCA4 of %d and %d is %d \n", n1, n2, l);
 
     printf("\n");
     return 0;
 }
+
+
+
+
+/*
+//LCA1
+
+ //Need a helper function for the first algorithm. findPath
+ //finds a path from root to target, if there is none
+ //then return false, otherwise store the path in path<int>
+ int findPath(bst *t, arraylist *path, int target) {
+ //check if the tree is empty
+ if(t == NULL) return -1;
+ 
+ //store t in path
+ add(path, t->item);
+ 
+ //if the the current t->item is the target, return true
+ if(t->item == target) return 1;
+ 
+ //recursively check the left and right subtrees of t
+ if( (t->left && findPath(t->left, path, target)) ||
+ (t->right && findPath(t->right, path, target)) )
+ return 1;
+ 
+ //If target isn't present in t, remove t from path and
+ //return false
+ del(path, (getSize(path) - 1));
+ return -1;
+ }
+ 
+ bst *lca1(bst *t, int n1, int n2)
+ {
+ //make arraylists to store paths to n1 and n2 from root of t
+ arraylist path1;
+ init(&path1);
+ arraylist path2;
+ init(&path2);
+ 
+ //find paths from root of t to n1 and root to n2,
+ //if either are not present in t, return NULL
+ if( findPath(t, &path1, n1) == 0 || findPath(t, &path2, n2) == 0 )
+ return NULL;
+ 
+ //compare the paths to get the first different value
+ int i;
+ for(i = 0; (i < getSize(&path1) && getSize(&path2)); i++) {
+ if(get(&path1, i) != get(&path2, i)) break;
+ }
+ return get(&path1, i-1);
+ }
+ 
+ 
+ in Main()
+ //LCA1
+ 
+ t = lca1(a, n1, n2);
+ printf("LCA1 of %d and %d is %d \n", n1, n2, t->item);
+ 
+ n1 = 14, n2 = 8;
+ t = lca1(a, n1, n2);
+ printf("LCA1 of %d and %d is %d \n", n1, n2, t->item);
+ 
+ n1 = 10, n2 = 22;
+ t = lca1(a, n1, n2);
+ printf("LCA1 of %d and %d is %d \n", n1, n2, t->item);
+ */
