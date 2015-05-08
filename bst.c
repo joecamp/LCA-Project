@@ -3,7 +3,7 @@
 #include <time.h>
 #include "bst.h"
 
-int treeSize = 100; //global declariation of the nodes in the tree
+int treeSize = 10; //global declariation of the nodes in the tree
 
 //swap code
 void swap (int *a, int *b) {
@@ -12,19 +12,13 @@ void swap (int *a, int *b) {
     *b = temp;
 }
 
-//function to randomize/shuffle the values in a given array of n size
+//randomize/shuffle the values in a given array of n size
 void randomize(int *arr, int n) {
     int i;
-    // Use a different seed value so that we don't get same
-    // result each time we run this program
     srand (time(NULL));
     
-    // Start from the last element and swap one by one. We don't
-    // need to run for the first element that's why i > 0
     for (i = n-1; i > 0; i--){
-        // Pick a random index from 0 to i
         int j = rand() % (i+1);
-        // Swap arr[i] with the element at random index
         swap(&arr[i], &arr[j]);
     }
 }
@@ -56,7 +50,7 @@ bst *bstAdd(bst *t, int x, bst *p) {
 
 //helper function to take a bst and return the parent array
 //Pre-Condition: Assumes the only repeated values in the given bst are that of the root
-//and its parent, where a roots parent's value is the same as the value of the root
+//and its parent, where a root's parent's value is -1
 void BSTtoParentArray(bst *t, int *p){
     if(t->parent == NULL){
         p[t->item] = -1;
@@ -124,7 +118,7 @@ int lca4(int *p, int n1, int n2){
     //loop executes until LCA is found
     while(1){
         //FOR FIRST VALUE
-        //stop traversing if the value is equal to its parent, or, its at the root
+        //stop traversing if we hit the root of parent value -1
         if(v1 != -1){
             //check if the first value and its input has already been visted, then it is the LCA
             if(discovered[v1]) {
@@ -137,7 +131,7 @@ int lca4(int *p, int n1, int n2){
             }
         }
         //FOR SECOND VALUE
-        //stop traversing if the value is equal to its parent, or, its at the root
+        //stop traversing if we hit the root of parent value -1
         if(v2 != -1){
             //check if the second value and its input has already been vistied, then it is the LCA
             if(discovered[v2]) {
@@ -163,7 +157,7 @@ int main() {
 	double time_spent;
 
     //create array of 0..treeSize-1
-    int i;
+    int i, j, l;
     int arr[treeSize];
     for(i = 0; i < treeSize; i++){
         arr[i] = i;
@@ -176,11 +170,16 @@ int main() {
     for (i = 0; i < treeSize; i++) {
         a = bstAdd(a, arr[i], NULL);
     }
-
+    
+    
+    //Jon and/or David
+    //please delete these two lines when you incorporate the
+    //performance metrics on the two for loops
+    //and please uncomment the two lines after //LCA2
+    //this solo case can be deleted too
+    //Thanks -Lisa
     bst *t;
     t = (bst *)malloc(sizeof(bst));
-    
-    
     
     // Starts runtime
     begin = clock();
@@ -206,38 +205,30 @@ int main() {
      * for cache misses and instructions executed. We can get this from
      * using valgrind and selecting the cachegrind tool.*/
     
-
-    printf("LCA2 of %d and %d is %d \n", n1, n2, t->item);
-
-    //n1 = 14, n2 = 8;
-    n1 = 2, n2 = 6;
-    t = lca2(a, n1, n2);
-    printf("LCA2 of %d and %d is %d \n", n1, n2, t->item);
-
-    //n1 = 10, n2 = 22;
-    n1 = 3, n2 = 1;
-    t = lca2(a, n1, n2);
-    printf("LCA2 of %d and %d is %d \n", n1, n2, t->item);
+    
+    
+    
+    //LCA2
+    //uncomment these, please
+    //bst *t;
+    //t = (bst *)malloc(sizeof(bst));
+    for(i = 0; i < treeSize; i ++){
+        for (j = 0; j < treeSize; j++){
+            t = lca2(a, i, j);
+            printf("LCA2 of %d and %d is %d \n", i, j, t->item);
+        }
+    }
     printf("\n");
     
     //LCA4
-    
-    int p [treeSize];
+    int p[treeSize];
     BSTtoParentArray(a, p);
-    int l;
-    
-    n1 = 0, n2 = (treeSize-1);
-    l = lca4(p, n1, n2);
-    printf("LCA4 of %d and %d is %d \n", n1, n2, l);
-    
-    n1 = 2, n2 = 6;
-    l = lca4(p, n1, n2);
-    printf("LCA4 of %d and %d is %d \n", n1, n2, l);
-    
-    n1 = 3, n2 = 1;
-    l = lca4(p, n1, n2);
-    printf("LCA4 of %d and %d is %d \n", n1, n2, l);
-
+    for(i = 0; i < treeSize; i ++){
+        for (j = 0; j < treeSize; j++){
+            l = lca4(p, i, j);
+            printf("LCA4 of %d and %d is %d \n", i, j, l);
+        }
+    }
     printf("\n");
     return 0;
 }
