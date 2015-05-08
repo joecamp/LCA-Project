@@ -3,7 +3,7 @@
 #include <time.h>
 #include "bst.h"
 
-int treeSize = 21; //global declariation of the nodes in the tree
+int treeSize = 100; //global declariation of the nodes in the tree
 
 //Constructs Balanced Binary Search Tree from a sorted array
 bst* sortedArrayToBST(int arr[], int start, int end, bst *p)
@@ -33,8 +33,7 @@ bst* sortedArrayToBST(int arr[], int start, int end, bst *p)
 //helper function to take a bst and return the parent array
 //Pre-Condition: Assumes the only repeated values in the given bst are that of the root and its parent, where a roots parent's value is the same as the value of the root
 void BSTtoParentArray(bst *t, int *p){
-    
-    if(t->parent = NULL){
+    if(t->parent == NULL){
         p[t->item] = -1;
     }
     
@@ -151,56 +150,36 @@ int lca4(int *p, int n1, int n2){
     
     //loop executes until LCA is found
     while(1){
-        printf("s");
-        fflush(stdout);
         //FOR FIRST VALUE
         //stop traversing if the value is equal to its parent, or, its at the root
-        if(v1 != -1){ //v1 != p[v1]
-            printf("a");
-            fflush(stdout);
+        if(v1 != -1){
             //check if the first value and its input has already been visted, then it is the LCA
             if(discovered[v1]) {
-                printf("b");
-                fflush(stdout);
                 return v1;
             }
             //otherwise mark it as discovered and traverse up the tree to its parent
             else{
-                printf("c");
-                fflush(stdout);
                 discovered[v1] = 1;
                 v1 = p[v1];
             }
         }
-        printf("m");
-        fflush(stdout);
         //FOR SECOND VALUE
         //stop traversing if the value is equal to its parent, or, its at the root
-        if(v2 != -1){ //v2 != p[v2]
-            printf("d");
-            fflush(stdout);
+        if(v2 != -1){
             //check if the second value and its input has already been vistied, then it is the LCA
             if(discovered[v2]) {
-                printf("e");
-                fflush(stdout);
                 return v2;
             }
             //otherwise mark it as discovered and traverse up the tree to its parent
             else{
-                printf("f");
-                fflush(stdout);
                 discovered[v2] = 1;
                 v2 = p[v2];
             }
         }
-        printf("r");
-        fflush(stdout);
         //if both v1 and v2 traverse up to the root, it is the LCA
         if((v1 == -1) && (v2 == -1)){
             return v1;
         }
-        printf("t ");
-        fflush(stdout);
     }
 }
 
@@ -220,6 +199,7 @@ int main() {
     bst *a = NULL;
     a = sortedArrayToBST(arr, 0, (treeSize-1), a);
     //printTree(a);
+    //printf("\n");
 
     bst *t;
     t = (bst *)malloc(sizeof(bst));
