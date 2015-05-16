@@ -5,7 +5,7 @@
 #include <vector>
 using namespace std;
 
-int treeSize = 100;
+int treeSize = 10;
 
 // A Binary Tree node
 struct Node
@@ -167,32 +167,36 @@ int main()
     for(i = 0; i < treeSize; i++) {
         nodeAdd(root, arr[i]);
     }
-
+    
+    //LCA1
     begin = clock();
     for(i = 0; i < treeSize; i++) {
         for(j = 0; j < treeSize; j++) {
             l = lca1(root, i, j);
-            //cout << "LCA1 of " << i << " and " << j << " is " << l;
-            //cout << "\n";
+            cout << "LCA1 of " << i << " and " << j << " is " << l;
+            cout << "\n";
         }
     }
     end = clock();
     time_spent = (double)(end - begin) / CLOCKS_PER_SEC * 1000;
     cout << "The time to run LCA1 is " << time_spent;
+    cout << "\n";
 
+    //LCA3
     begin = clock();
     int p[treeSize];
     BSTtoParentArray(root, p);
     for(i = 0; i < treeSize; i++) {
         for(j = 0; j < treeSize; j++) {
             l = lca3(p, i, j);
-            //cout << "LCA3 of " << i << " and " << j << " is " << l;
-            //cout << "\n";
+            cout << "LCA3 of " << i << " and " << j << " is " << l;
+            cout << "\n";
         }
     }
     end = clock();
     time_spent = (double)(end - begin) / CLOCKS_PER_SEC * 1000;
     cout << "\nThe time to run LCA3 is " << time_spent;
+    cout << "\n";
 
     return 0;
 }
