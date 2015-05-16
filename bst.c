@@ -78,8 +78,6 @@ void printTree(bst *t) {
 
 //LCA functions assume that n1 and n2 are present in Binary Tree
 
-//LCA1 Joe, your LCA1 code is at the bottom
-
 //LCA2
 bst *lca2(bst *t, int n1, int n2)
 {
@@ -172,55 +170,24 @@ int main() {
     }
     
     
-    //Jon and/or David
-    //please delete these two lines when you incorporate the
-    //performance metrics on the two for loops
-    //and please uncomment the two lines after //LCA2
-    //this solo case can be deleted too
-    //Thanks -Lisa
+    //LCA2
+    begin = clock();
     bst *t;
     t = (bst *)malloc(sizeof(bst));
-    
-    // Starts runtime
-    begin = clock();
-
-    //printf("The start time is %d\n",begin );
-    int n1 = 0, n2 = (treeSize-1);
-    t = lca2(a, n1, n2);
-
-    // Ends runtime
-    end = clock();
-
-    //printf("The end time is %d\n",end);
-
-    // Calculates the runtime in seconds
-    // We multiply CLOCKS_PER_SEC by 1000 to accurately get the milliseconds
-
-    time_spent = (double)(end - begin) / CLOCKS_PER_SEC * 1000;
-
-    //need to implement: writing runtimes to file
-    printf("The time to run the algorithm is %f\n", time_spent);
-
-    /*Next to implement: using cachegrind in order to get the metrics
-     * for cache misses and instructions executed. We can get this from
-     * using valgrind and selecting the cachegrind tool.*/
-    
-    
-    
-    
-    //LCA2
-    //uncomment these, please
-    //bst *t;
-    //t = (bst *)malloc(sizeof(bst));
     for(i = 0; i < treeSize; i ++){
         for (j = 0; j < treeSize; j++){
             t = lca2(a, i, j);
             printf("LCA2 of %d and %d is %d \n", i, j, t->item);
         }
     }
+    end = clock();
+    time_spent = (double)(end - begin) / CLOCKS_PER_SEC * 1000;
+    printf("The time to run LCA2 is %f\n", time_spent);
     printf("\n");
     
+    
     //LCA4
+    begin = clock();
     int p[treeSize];
     BSTtoParentArray(a, p);
     for(i = 0; i < treeSize; i ++){
@@ -229,73 +196,10 @@ int main() {
             printf("LCA4 of %d and %d is %d \n", i, j, l);
         }
     }
+    end = clock();
+    time_spent = (double)(end - begin) / CLOCKS_PER_SEC * 1000;
+    printf("The time to run LCA4 is %f\n", time_spent);
     printf("\n");
+    
     return 0;
 }
-
-
-
-
-/*
-//LCA1
-
- //Need a helper function for the first algorithm. findPath
- //finds a path from root to target, if there is none
- //then return false, otherwise store the path in path<int>
- int findPath(bst *t, arraylist *path, int target) {
- //check if the tree is empty
- if(t == NULL) return -1;
- 
- //store t in path
- add(path, t->item);
- 
- //if the the current t->item is the target, return true
- if(t->item == target) return 1;
- 
- //recursively check the left and right subtrees of t
- if( (t->left && findPath(t->left, path, target)) ||
- (t->right && findPath(t->right, path, target)) )
- return 1;
- 
- //If target isn't present in t, remove t from path and
- //return false
- del(path, (getSize(path) - 1));
- return -1;
- }
- 
- bst *lca1(bst *t, int n1, int n2)
- {
- //make arraylists to store paths to n1 and n2 from root of t
- arraylist path1;
- init(&path1);
- arraylist path2;
- init(&path2);
- 
- //find paths from root of t to n1 and root to n2,
- //if either are not present in t, return NULL
- if( findPath(t, &path1, n1) == 0 || findPath(t, &path2, n2) == 0 )
- return NULL;
- 
- //compare the paths to get the first different value
- int i;
- for(i = 0; (i < getSize(&path1) && getSize(&path2)); i++) {
- if(get(&path1, i) != get(&path2, i)) break;
- }
- return get(&path1, i-1);
- }
- 
- 
- in Main()
- //LCA1
- 
- t = lca1(a, n1, n2);
- printf("LCA1 of %d and %d is %d \n", n1, n2, t->item);
- 
- n1 = 14, n2 = 8;
- t = lca1(a, n1, n2);
- printf("LCA1 of %d and %d is %d \n", n1, n2, t->item);
- 
- n1 = 10, n2 = 22;
- t = lca1(a, n1, n2);
- printf("LCA1 of %d and %d is %d \n", n1, n2, t->item);
- */
