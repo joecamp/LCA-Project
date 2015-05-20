@@ -3,7 +3,9 @@
 #include <time.h>
 #include "bst.h"
 
-int treeSize = 10; //global declariation of the nodes in the tree
+int treeSize = 100; //global declariation of the nodes in the tree
+//NOTE: For baseline, to get CPI & Latency, the treesize is 100
+// to Show impact of treesize on runtime, Tree Size will be changed to 500, 750, 1000 & 1250.
 
 //swap code
 void swap (int *a, int *b) {
@@ -181,7 +183,7 @@ int main() {
         }
     }
     end = clock();
-    time_spent = (double)(end - begin) / CLOCKS_PER_SEC * 1000;
+    time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
     printf("The time to run LCA2 is %f\n", time_spent);
     printf("\n");
     
@@ -197,7 +199,7 @@ int main() {
         }
     }
     end = clock();
-    time_spent = (double)(end - begin) / CLOCKS_PER_SEC * 1000;
+    time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
     printf("The time to run LCA4 is %f\n", time_spent);
     printf("\n");
     
