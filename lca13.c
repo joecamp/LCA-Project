@@ -179,7 +179,7 @@ int main() {
     for(i = 0; i < treeSize; i ++){
         for (j = 0; j < treeSize; j++){
             t = lca2(a, i, j);
-            printf("LCA2 of %d and %d is %d \n", i, j, t->item);
+           // printf("LCA2 of %d and %d is %d \n", i, j, t->item);
         }
     }
     end = clock();
@@ -195,7 +195,7 @@ int main() {
     for(i = 0; i < treeSize; i ++){
         for (j = 0; j < treeSize; j++){
             l = lca4(p, i, j);
-            printf("LCA4 of %d and %d is %d \n", i, j, l);
+         //   printf("LCA4 of %d and %d is %d \n", i, j, l);
         }
     }
     end = clock();
