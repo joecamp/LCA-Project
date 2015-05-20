@@ -5,8 +5,9 @@
 #include <vector>
 using namespace std;
 
-int treeSize = 10;
-
+int treeSize = 100;
+//NOTE: For baseline, to get CPI & Latency, the treesize is 100
+// to Show impact of treesize on runtime, Tree Size will be changed to 500, 750, 1000 & 1250.
 // A Binary Tree node
 struct Node
 {
@@ -173,12 +174,12 @@ int main()
     for(i = 0; i < treeSize; i++) {
         for(j = 0; j < treeSize; j++) {
             l = lca1(root, i, j);
-            cout << "LCA1 of " << i << " and " << j << " is " << l;
-            cout << "\n";
+         //   cout << "LCA1 of " << i << " and " << j << " is " << l;
+         //   cout << "\n";
         }
     }
     end = clock();
-    time_spent = (double)(end - begin) / CLOCKS_PER_SEC * 1000;
+    time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
     cout << "The time to run LCA1 is " << time_spent;
     cout << "\n";
 
@@ -189,12 +190,12 @@ int main()
     for(i = 0; i < treeSize; i++) {
         for(j = 0; j < treeSize; j++) {
             l = lca3(p, i, j);
-            cout << "LCA3 of " << i << " and " << j << " is " << l;
-            cout << "\n";
+      //      cout << "LCA3 of " << i << " and " << j << " is " << l;
+        //    cout << "\n";
         }
     }
     end = clock();
-    time_spent = (double)(end - begin) / CLOCKS_PER_SEC * 1000;
+    time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
     cout << "\nThe time to run LCA3 is " << time_spent;
     cout << "\n";
 
